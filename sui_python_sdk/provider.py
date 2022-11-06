@@ -48,8 +48,8 @@ class SuiJsonRpcProvider:
                                  json=[{
                                      "jsonrpc": "2.0",
                                      "method": methods[i],
-                                     "params": params.get(i) if (
-                                             isinstance(params, list) and params.get(i) is not None) else [],
+                                     "params": params[i] if (
+                                             isinstance(params, list) and params[i] is not None) else [],
                                      "id": request_ids[i] if isinstance(request_ids, list) else str(uuid.uuid4()),
                                  } for i in range(len(methods))
                                  ]
