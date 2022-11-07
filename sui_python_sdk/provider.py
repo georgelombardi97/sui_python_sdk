@@ -109,3 +109,9 @@ class SuiJsonRpcProvider:
                                                 signature_b64_encoded,
                                                 pubkey_b64_encoded,
                                                 executeType])
+
+    def get_total_transaction_number(self):
+        return self.send_request_to_rpc(method="sui_getTotalTransactionNumber")
+
+    def get_total_transaction_in_range(self, start_of_range: int, end_of_range: int):
+        return self.send_request_to_rpc(method="sui_getTransactionsInRange", params=[start_of_range, end_of_range])
