@@ -11,5 +11,5 @@ setuptools.setup(
     name="sui_python_sdk",
     packages=["sui_python_sdk"],
     python_requires=">=3.7",
-    version="0.1.1",
+    version="0.1.2",
 )
