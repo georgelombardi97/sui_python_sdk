@@ -103,12 +103,22 @@ class SuiJsonRpcProvider:
             tx_bytes_b64_encoded = base64.b64encode(tx_bytes_b64_encoded).decode()
         if isinstance(signature_b64_encoded, bytes):
             signature_b64_encoded = base64.b64encode(signature_b64_encoded).decode()
-        return self.send_request_to_rpc(method="sui_executeTransaction",
-                                        params=[tx_bytes_b64_encoded,
-                                                signature_scheme,
-                                                signature_b64_encoded,
-                                                pubkey_b64_encoded,
-                                                executeType])
+
+        signature_scheme_to_flag = {
+            SignatureScheme.ED25519: 0x00,
+            SignatureScheme.Secp256k1: 0x01,
+        }
+        signature_scheme_flag = signature_scheme_to_flag[signature_scheme]
+
+        serialized_sig = [signature_scheme_flag] + \
+                         list(base64.b64decode(signature_b64_encoded)) + \
+                         list(base64.b64decode(pubkey_b64_encoded))
+
+        return self.send_request_to_rpc(method="sui_executeTransactionSerializedSig",
+                                        params=[
+                                            tx_bytes_b64_encoded,
+                                            base64.b64encode(bytes(serialized_sig)).decode(),
+                                            executeType])
 
     def get_total_transaction_number(self):
         return self.send_request_to_rpc(method="sui_getTotalTransactionNumber")
