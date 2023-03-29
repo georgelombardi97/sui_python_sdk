@@ -28,7 +28,9 @@ class SuiWallet:
             mnemonic=bip_utils.Bip39MnemonicGenerator().FromWordsNumber(bip_utils.Bip39WordsNum.WORDS_NUM_24).ToStr())
 
     def get_address(self) -> str:
-        return "0x" + hashlib.sha3_256(self.bip32_der_ctx.PublicKey().RawCompressed().ToBytes()).digest().hex()[:40]
+        return "0x" + hashlib.blake2b(
+            self.bip32_der_ctx.PublicKey().RawCompressed().ToBytes(),
+            digest_size=32).hexdigest()[:64]
 
     def sign_data(self, data: bytes) -> bytes:
         return nacl.signing.SigningKey(self.private_key).sign(data)[:64]  # Todo: support secp256k1 key and signature
